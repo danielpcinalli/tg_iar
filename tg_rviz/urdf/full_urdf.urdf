@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-1-g15f4949  Build Version: 1.6.7594.29634
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="full_urdf">
+  <link
+    name="link1">
+    <inertial>
+      <origin
+        xyz="4.4410586445387E-05 1.45177986581313E-05 0.037113179191386"
+        rpy="0 0 0" />
+      <mass
+        value="0.635779498961267" />
+      <inertia
+        ixx="0.00151123987386836"
+        ixy="1.1011358416876E-09"
+        ixz="1.32447037777926E-06"
+        iyy="0.00151196559273963"
+        iyz="-1.56524080812258E-07"
+        izz="0.00261737665265417" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.294117647058824 0.294117647058824 0.294117647058824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="link2">
+    <inertial>
+      <origin
+        xyz="7.95491834643947E-05 9.19921252534872E-05 0.0829570557972189"
+        rpy="0 0 0" />
+      <mass
+        value="1.60032877977738" />
+      <inertia
+        ixx="0.00838854576696447"
+        ixy="-3.8941138011219E-06"
+        ixz="-3.49984649445926E-06"
+        iyy="0.0068511133901636"
+        iyz="-4.37926052663677E-07"
+        izz="0.00630839131304142" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.0980392156862745 0.0980392156862745 0.0980392156862745 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint1"
+    type="continuous">
+    <origin
+      xyz="7.7842E-05 0 0.065"
+      rpy="0 0 0" />
+    <parent
+      link="link1" />
+    <child
+      link="link2" />
+    <axis
+      xyz="-0.0011976 0 -1" />
+  </joint>
+  <link
+    name="link3">
+    <inertial>
+      <origin
+        xyz="-0.000376995105643763 0.00114200217520197 0.0757659063786574"
+        rpy="0 0 0" />
+      <mass
+        value="1.79175976433997" />
+      <inertia
+        ixx="0.00493022759174285"
+        ixy="6.21557128134879E-07"
+        ixz="1.3870513938658E-05"
+        iyy="0.00483872598023994"
+        iyz="9.58679544162898E-06"
+        izz="0.0028490373546818" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.294117647058824 0.294117647058824 0.294117647058824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint2"
+    type="continuous">
+    <origin
+      xyz="0.0001982 0 0.1655"
+      rpy="0 0 0" />
+    <parent
+      link="link2" />
+    <child
+      link="link3" />
+    <axis
+      xyz="-0.002626 -1 0" />
+  </joint>
+  <link
+    name="link4">
+    <inertial>
+      <origin
+        xyz="-7.18441758113808E-05 -0.00157534217819362 0.0379704140353342"
+        rpy="0 0 0" />
+      <mass
+        value="0.656516302979665" />
+      <inertia
+        ixx="0.00192392283265257"
+        ixy="5.9133568135509E-08"
+        ixz="-1.12401802567594E-06"
+        iyy="0.0019650280022993"
+        iyz="-9.14034023346133E-06"
+        izz="0.000660627878577304" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.294117647058824 0.294117647058824 0.294117647058824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint3"
+    type="continuous">
+    <origin
+      xyz="-0.0013202 0 0.22112"
+      rpy="0 0 0" />
+    <parent
+      link="link3" />
+    <child
+      link="link4" />
+    <axis
+      xyz="0.002626 1 0" />
+  </joint>
+  <link
+    name="link5">
+    <inertial>
+      <origin
+        xyz="-0.000888735907033089 -4.04206613251537E-05 0.0561880015809195"
+        rpy="0 0 0" />
+      <mass
+        value="0.260588327612912" />
+      <inertia
+        ixx="0.000589208824949663"
+        ixy="-3.97270895090325E-07"
+        ixz="-1.01413152943679E-05"
+        iyy="0.000504052153281017"
+        iyz="6.77605671032426E-07"
+        izz="0.000287636586754905" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.294117647058824 0.294117647058824 0.294117647058824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link5.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint4"
+    type="continuous">
+    <origin
+      xyz="4.2438E-05 -0.0020038 0.123"
+      rpy="0 0 0" />
+    <parent
+      link="link4" />
+    <child
+      link="link5" />
+    <axis
+      xyz="0.00038783 0 1" />
+  </joint>
+  <link
+    name="link6">
+    <inertial>
+      <origin
+        xyz="0.000165286313128787 0.00160938604622973 0.00387295294262002"
+        rpy="0 0 0" />
+      <mass
+        value="0.158570003124453" />
+      <inertia
+        ixx="6.80599721569477E-05"
+        ixy="9.47555358098318E-08"
+        ixz="-6.03763413561723E-07"
+        iyy="0.000106554395763305"
+        iyz="1.77658172708233E-07"
+        izz="5.36086056485322E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link6.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.294117647058824 0.294117647058824 0.294117647058824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/link6.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="joint5"
+    type="continuous">
+    <origin
+      xyz="3.859E-05 0 0.099504"
+      rpy="0 0 0" />
+    <parent
+      link="link5" />
+    <child
+      link="link6" />
+    <axis
+      xyz="-0.0022684 -1 0" />
+  </joint>
+  <link
+    name="gripper">
+    <inertial>
+      <origin
+        xyz="0.00154975285848991 0.000579442542277146 0.0279238612772337"
+        rpy="0 0 0" />
+      <mass
+        value="0.0659147929415106" />
+      <inertia
+        ixx="2.54420737196308E-05"
+        ixy="5.7960790564021E-07"
+        ixz="-6.38272338894767E-07"
+        iyy="1.64104171153709E-05"
+        iyz="-8.1574540723306E-08"
+        izz="1.21115605173781E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/gripper.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.294117647058824 0.294117647058824 0.294117647058824 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tg_rviz/gripper.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fixed1"
+    type="fixed">
+    <origin
+      xyz="0.0020695 0.0018182 0.051959"
+      rpy="0 0 0" />
+    <parent
+      link="link6" />
+    <child
+      link="gripper" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>
