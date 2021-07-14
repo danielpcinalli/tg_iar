@@ -61,7 +61,7 @@ def main():
 
         #inicia primeira população com genomas iguais e os randomiza depois
         population = Population(genomes=[genome] * 20,
-                                n_selected=8, mutation_rate=.05, crossover_strategy='mix')
+                                n_selected=8, mutation_rate=.1, crossover_strategy='mix')
         population.randomize_population(n_generations=500)
     if sys.argv[1] == 'load':
         print('População carregada')
