@@ -4,7 +4,7 @@ import numpy as np
 from typing import List, Union
 
 from numpy.lib.function_base import select
-from util import event_with_probability
+from util import event_with_probability, mix
 
 
 class Gene:
@@ -130,12 +130,17 @@ class Genome:
 
 
 class Population:
-    def __init__(self, genomes: List[Genome], n_selected, mutation_rate=.01):
-        self.genomes = genomes
+    def __init__(self, genomes: List[Genome], n_selected, mutation_rate=.01, crossover_strategy = 'one_point'):
+        self.genomes : List[Genome] = genomes
         self.n = n_selected
         self.population_size = len(self.genomes)
         self.genome_size = self.genomes[0].size
         self.mutation_rate = mutation_rate
+
+        if crossover_strategy == 'one_point':
+            self.crossover = self.crossover_one_point
+        if crossover_strategy == 'mix':
+            self.crossover = self.crossover_mix
 
     def nextGeneration(self, fitness_list: List[float]):
         """
@@ -147,27 +152,43 @@ class Population:
         self.genomes = []
         self.genomes.extend(selected_genomes)  # estratégia elitista
         while len(self.genomes) < self.population_size:
-            genomes_to_crossover = np.random.choice(
-                a=selected_genomes,
+            genome1_index, genome2_index = np.random.choice(
+                a=range(self.genome_size),
                 size=2,
                 replace=False)
-            index = np.random.random_integers(low=0, high=self.genome_size)
-            newGenome = self.crossover(
-                genomes_to_crossover[0],
-                genomes_to_crossover[1],
-                index)
-            self.genomes.append(newGenome)
+            
+            newGenomes = self.crossover(
+                self.genomes[genome1_index],
+                self.genomes[genome2_index])
+            self.genomes.extend(newGenomes)
+        #como dois genomas são inseridos de cada vez, é possível ultrapassar a quantidade de genomas
+        self.genomes = self.genomes[0:self.population_size]
         #mutação
         for index in range(self.population_size):
             if event_with_probability(self.mutation_rate):
                 self.genomes[index].mutate()
 
+    def crossover_one_point(self, genome1: Genome, genome2: Genome):
+        index = np.random.random_integers(low=0, high=self.genome_size)
+        genome1_genes1 = genome1.getGenes()[0:index]
+        genome2_genes2 = genome2.getGenes()[index:]
+        genome2_genes1 = genome2.getGenes()[0:index]
+        genome1_genes2 = genome1.getGenes()[index:]
 
-    def crossover(self, genome1: Genome, genome2: Genome, index):
-        genes = genome1.getGenes()[0:index]
-        genes.extend(genome2.getGenes()[index:])
-        newGenome = Genome(genes)
-        return newGenome
+        newGenome1 = Genome(genome1_genes1 + genome2_genes2)
+        newGenome2 = Genome(genome2_genes1 + genome1_genes2)
+        return [newGenome1, newGenome2]
+
+    
+    def crossover_mix(self, genome1: Genome, genome2: Genome):
+
+        genes1 = genome1.getGenes().copy()
+        genes2 = genome2.getGenes().copy()
+
+        bool_list = np.random.choice(a=[True, False], size=self.genome_size)
+        newGenome1 = Genome(mix(genes1, genes2, bool_list))
+        newGenome2 = Genome(mix(genes2, genes1, bool_list))
+        return [newGenome1, newGenome2]
 
     def selection(self, fitness_list):
         probabilities = np.array(fitness_list) / sum(fitness_list)
