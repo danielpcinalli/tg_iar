@@ -25,7 +25,7 @@ def genome_to_NN(genome: Genome):
     hls = tuple(hls)
 
     clf = MLPRegressor(hidden_layer_sizes=hls, activation=act,
-                       solver=slv, learning_rate=lrs, learning_rate_init=lr, random_state=0)
+                       solver=slv, learning_rate=lrs, learning_rate_init=lr, random_state=0, max_iter=400)
     return clf
 
 
@@ -35,8 +35,8 @@ def main():
     #carrega arquivo e cria dados de treinamento e teste
     df = pd.read_csv('data.csv')
 
-    X = df.iloc[:5000, 5:]
-    y = df.iloc[:5000, 0:5]
+    X = df.iloc[:15000, 5:]
+    y = df.iloc[:15000, 0:5]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
 
     if sys.argv[1] == 'reset':
