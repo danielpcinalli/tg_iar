@@ -3,7 +3,7 @@ from typing import List, Union
 from numpy.lib import utils
 
 from numpy.lib.function_base import select
-from util import event_with_probability, mix
+import util
 
 
 class Gene:
@@ -77,7 +77,7 @@ class GeneSequence(Gene):
 
     def _change_size(self):
         # decide se irá crescer ou diminuir a sequência de genes
-        increase_size = event_with_probability(.5)
+        increase_size = util.event_with_probability(.5)
         # garante mudar tamanho dentro dos limites
         if len(self.genes) == self.maxGenes:
             increase_size = False
@@ -94,7 +94,7 @@ class GeneSequence(Gene):
 
     def mutate(self):
         # decide se irá mutar um dos genes ou se vai alterar o tamanho da sequência
-        if event_with_probability(self.change_size_prob):
+        if util.event_with_probability(self.change_size_prob):
             return self._change_size()
         else:
             index = np.random.randint(0, len(self.genes))
@@ -112,7 +112,8 @@ class GeneSequence(Gene):
         r = ''
         for gene in self.genes:
             r += repr(gene) + ';'
-        return r
+        
+        return r[:-1]#retira último ';'
 
 
 class Genome:
@@ -126,7 +127,7 @@ class Genome:
     def mutate(self, mutation_rate):
 
         for index in range(self.genomeSize):
-            if event_with_probability(mutation_rate):
+            if util.event_with_probability(mutation_rate):
                 self.genes[index] = self.genes[index].mutate()
 
 
@@ -152,6 +153,7 @@ class Population:
         self.population_size = len(self.genomes)
         self.genome_size = self.genomes[0].size
         self.mutation_rate = mutation_rate
+        self.generation = 1
 
         if crossover_strategy == 'locus':
             self.crossover = self.crossover_locus
@@ -163,6 +165,7 @@ class Population:
         Dado uma lista com o fitness de cada genoma, 
         gera uma nova população
         """
+        self.generation += 1
         
         selected_genomes = self.selection(fitness_list)
         self.genomes = []
@@ -176,30 +179,30 @@ class Population:
                 selected_genomes[genome1_index],
                 selected_genomes[genome2_index])
             self.genomes.extend(newGenomes)
-        #como dois genomas são inseridos de cada vez, é possível ultrapassar a quantidade de genomas
+        #como dois genomas são inseridos de cada vez, é possível ultrapassar a quantidade de genomas caso se escolha selecionar um número ímpar de genomas
         self.genomes = self.genomes[0:self.population_size]
-        for genome in self.genomes:
-            genome.mutate(self.mutation_rate)
+        self._mutate()
 
     def crossover_locus(self, genome1: Genome, genome2: Genome):
-        index = np.random.random_integers(low=0, high=self.genome_size)
-        genome1_genes1 = genome1.getGenes()[0:index]
-        genome2_genes2 = genome2.getGenes()[index:]
-        genome2_genes1 = genome2.getGenes()[0:index]
-        genome1_genes2 = genome1.getGenes()[index:]
+        locus = np.random.random_integers(low=1, high=self.genome_size-1)
+        genome1_genes = genome1.getGenes()
+        genome2_genes = genome2.getGenes()
+        newGenome1 = Genome(util.locus(genome1_genes, genome2_genes, locus))
+        newGenome2 = Genome(util.locus(genome2_genes, genome1_genes, locus))
 
-        newGenome1 = Genome(genome1_genes1 + genome2_genes2)
-        newGenome2 = Genome(genome2_genes1 + genome1_genes2)
         return [newGenome1, newGenome2]
 
+    def _mutate(self):
+        for genome in self.genomes:
+            genome.mutate(self.mutation_rate)
     
     def crossover_mix(self, genome1: Genome, genome2: Genome):
         genes1 = genome1.getGenes()
         genes2 = genome2.getGenes()
         
         bool_list = np.random.choice(a=[True, False], size=self.genome_size)
-        newGenome1 = Genome(mix(genes1, genes2, bool_list))
-        newGenome2 = Genome(mix(genes2, genes1, bool_list))
+        newGenome1 = Genome(util.mix(genes1, genes2, bool_list))
+        newGenome2 = Genome(util.mix(genes2, genes1, bool_list))
         return [newGenome1, newGenome2]
 
     def selection(self, fitness_list):
@@ -210,10 +213,9 @@ class Population:
         return selected_genomes
 
     def randomize_population(self, n_generations):
-        fitness = [1] * self.population_size
 
         for _ in range(n_generations):
-            self.nextGeneration(fitness)
+            self._mutate()
 
     def __repr__(self) -> str:
         r = ''

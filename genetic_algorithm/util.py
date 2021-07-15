@@ -19,3 +19,8 @@ def mix(list1: List, list2: List, list_bool: List):
         else:
             newList.append(l2)
     return newList
+
+def locus(list1: List, list2: List, locus):
+    newList = list1[0:locus] + list2[locus:]
+
+    return newList
