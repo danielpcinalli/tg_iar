@@ -74,7 +74,7 @@ def main():
                         learningRateStrategyGene, learningRateGene, architectureGene])
 
         #inicia primeira população com genomas iguais e os randomiza depois
-        population = Population(genomes=[genome] * 20,
+        population = Population(genomes=[genome] * 30,
                                 n_selected=8, mutation_rate=.05, crossover_strategy='locus')
         population.randomize_population(n_generations=1000)
 
