@@ -166,20 +166,24 @@ class Population:
         gera uma nova população
         """
         self.generation += 1
+
         
         selected_genomes = self.selection(fitness_list)
+        
         self.genomes = []
         self.genomes.extend(selected_genomes)  # estratégia elitista
+
         while len(self.genomes) < self.population_size:
             genome1_index, genome2_index = np.random.choice(
                 a=range(len(selected_genomes)),
                 size=2,
                 replace=False)
+            
             newGenomes = self.crossover(
                 selected_genomes[genome1_index],
                 selected_genomes[genome2_index])
             self.genomes.extend(newGenomes)
-        #como dois genomas são inseridos de cada vez, é possível ultrapassar a quantidade de genomas caso se escolha selecionar um número ímpar de genomas
+        #como dois genomas são inseridos de cada vez, é possível ultrapassar a quantidade de genomas caso self.n seja ímpar
         self.genomes = self.genomes[0:self.population_size]
         self._mutate()
 

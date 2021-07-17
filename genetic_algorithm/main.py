@@ -15,8 +15,15 @@ import numpy as np
 
 np.random.seed(0)#seta seed para reproducibilidade
 
-PICKLE_FILE = 'population.pkl'
+POPULATION_PICKLE_FILE = 'population.pkl'
+BEST_NN_PICKLE_FILE = 'neural_model.pkl'
 CSV_FILE = 'log_results.csv'
+
+POPULATION_SIZE = 60
+SELECTION_SIZE = 20
+MUTATION_RATE = .01
+
+N_GENERATIONS = 1000
 
 def mse_to_fitness(mse):
     fitness = 1. / (mse + .00001)
@@ -39,8 +46,9 @@ def genome_to_NN(genome: Genome):
 #pois será executada em paralelo
 df = pd.read_csv('data.csv')
 
-X = df.iloc[:20000, 5:]
-y = df.iloc[:20000, 0:5]
+X = df.iloc[:50000, 5:]
+y = df.iloc[:50000, 0:5]
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
 
 def rate_nn(nn):
@@ -58,9 +66,9 @@ def main():
 
         #inicializa genes e genoma
         hiddenLayerGene = IntGene(
-            initial_value=5, min_value=5, max_value=40, deviation=5)
+            initial_value=10, min_value=5, max_value=150, deviation=5)
         architectureGene = GeneSequence(
-            genes=[hiddenLayerGene, hiddenLayerGene], minGenes=1, maxGenes=10, change_size_prob=.5)
+            genes=[hiddenLayerGene, hiddenLayerGene], minGenes=1, maxGenes=20, change_size_prob=.5)
         activationGene = StringGene(
             values_list=['relu', 'identity', 'tanh', 'logistic'], initial_value_index=0)
         solverGene = StringGene(
@@ -74,24 +82,26 @@ def main():
                         learningRateStrategyGene, learningRateGene, architectureGene])
 
         #inicia primeira população com genomas iguais e os randomiza depois
-        population = Population(genomes=[genome] * 30,
-                                n_selected=8, mutation_rate=.05, crossover_strategy='locus')
-        population.randomize_population(n_generations=1000)
+        population = Population(genomes=[genome] * POPULATION_SIZE,
+                                n_selected=SELECTION_SIZE, mutation_rate=MUTATION_RATE, crossover_strategy='locus')
+        population.randomize_population(n_generations=500)
 
     if sys.argv[1] == 'load':
         print('População carregada')
-        with open(PICKLE_FILE, 'rb') as pkl_file:
+        with open(POPULATION_PICKLE_FILE, 'rb') as pkl_file:
             population = pickle.load(pkl_file)
 
     print('População inicial:')
     print(population)
-    n_generations = 100
+    
 
     pool = Pool()
 
+    best_fitness = 0
+
     try:
         start = time.time()
-        for i in range(n_generations):
+        for i in range(N_GENERATIONS):
 
             nns = [genome_to_NN(genome) for genome in population.genomes]
             fitness_list = pool.map(rate_nn, nns)
@@ -100,11 +110,23 @@ def main():
             print(f'GERAÇÃO {i+1}')
             print(population)
             #salva população atual na memória
-            with open(PICKLE_FILE, 'wb') as pfile:
+            with open(POPULATION_PICKLE_FILE, 'wb') as pfile:
                 pickle.dump(population, pfile, protocol=pickle.HIGHEST_PROTOCOL)
+            #mantém histórico de fitness
             with open(CSV_FILE, 'a+', newline='') as write_obj:
                 writer = csv.writer(write_obj)
                 writer.writerow(fitness_list)
+
+            #caso obtenha uma rede neural com melhor desempenho, a salva
+            index_best_nn = np.argmax(fitness_list)
+            if fitness_list[index_best_nn] > best_fitness:
+                best_nn = nns[index_best_nn]
+                best_fitness = fitness_list[index_best_nn]
+                with open(BEST_NN_PICKLE_FILE, 'wb') as pfile:
+                    pickle.dump(best_nn, pfile, protocol=pickle.HIGHEST_PROTOCOL)
+                print(f'Nova melhor rede neural com fitness = {best_fitness:.5}:')
+                print(best_nn)
+
         end = time.time()
         print(f'{end-start}')
     except KeyboardInterrupt:

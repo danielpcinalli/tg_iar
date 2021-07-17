@@ -24,3 +24,12 @@ def locus(list1: List, list2: List, locus):
     newList = list1[0:locus] + list2[locus:]
 
     return newList
+
+def select_indexes(n, m, probs):
+    """
+    Retorna n índices únicos entre [0, m) de acordo com a probabilidade
+    """
+    return np.random.choice(a=range(m), size=n, p=probs, replace=False)
+
+#x[[0,1]]
+#x[[True, False, True]]

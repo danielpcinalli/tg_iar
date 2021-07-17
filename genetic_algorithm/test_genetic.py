@@ -20,3 +20,8 @@ def test_locus():
     )
 
     assert l == [2, 's', 'c', 0, 'e']
+
+def test_select_indexes():
+    l = util.select_indexes(m=5, n=1, probs=[1., 0, 0, 0, 0])
+
+    assert l == [0]
