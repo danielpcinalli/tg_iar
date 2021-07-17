@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import setup
 
-package_name = 'tg_rviz'
+package_name = 'neural_net_model'
 
 setup(
     name=package_name,
@@ -12,9 +12,7 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name), glob('launch/*.py')),
-        (os.path.join('share', package_name), glob('urdf/*')),
-        (os.path.join('share', package_name), glob('meshes/*')),
+        (os.path.join('share', package_name), glob('model/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -25,11 +23,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'state_publisher = tg_rviz.state_publisher:main',
-            'state_listener = tg_rviz.state_listener:main',
-            'service_joint = tg_rviz.service_joint:main',
-            'client_joint = tg_rviz.joint_client:main',
-            'training_examples_creator = tg_rviz.training_examples_creator:main'
+            'nn_client = neural_net_model.nn_client:main',
+            'nn_service = neural_net_model.nn_service:main'
         ],
     },
 )
