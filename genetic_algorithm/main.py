@@ -9,7 +9,7 @@ from genetic import FloatGene, Genome, IntGene, Population, StringGene, GeneSequ
 import pandas as pd
 from sklearn.dummy import DummyRegressor
 from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import KFold, train_test_split
 import numpy as np
 
@@ -20,7 +20,7 @@ BEST_NN_PICKLE_FILE = 'neural_model.pkl'
 CSV_FILE = 'log_results.csv'
 
 POPULATION_SIZE = 60
-SELECTION_SIZE = 20
+SELECTION_SIZE = 30
 MUTATION_RATE = .01
 
 N_GENERATIONS = 1000
@@ -51,11 +51,20 @@ y = df.iloc[:50000, 0:5]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
 
-def rate_nn(nn):
+def rate_nn_mse(nn):
     nn.fit(X_train, y_train)
     y_pred = nn.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     fitness = mse_to_fitness(mse)
+    return fitness
+
+
+
+def rate_nn_r2(nn):
+    nn.fit(X_train, y_train)
+    y_pred = nn.predict(X_test)
+    r2 = r2_score(y_test, y_pred)
+    fitness = r2
     return fitness
     
 def main():
@@ -104,7 +113,7 @@ def main():
         for i in range(N_GENERATIONS):
 
             nns = [genome_to_NN(genome) for genome in population.genomes]
-            fitness_list = pool.map(rate_nn, nns)
+            fitness_list = pool.map(rate_nn_mse, nns)
 
             population.nextGeneration(fitness_list)
             print(f'GERAÇÃO {i+1}')
