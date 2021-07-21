@@ -1,7 +1,8 @@
 import numpy as np
 from typing import List, Union
 from numpy.lib import utils
-
+import logging
+logging.basicConfig(filename='logs.log', level=logging.INFO)
 from numpy.lib.function_base import select
 import util
 
@@ -166,22 +167,21 @@ class Population:
         gera uma nova população
         """
         self.generation += 1
-
+        logging.info(f'geração {self.generation}')
+        selected_genomes, selected_probabilities = self.selection(fitness_list)
         
-        selected_genomes = self.selection(fitness_list)
         
         self.genomes = []
         self.genomes.extend(selected_genomes)  # estratégia elitista
 
         while len(self.genomes) < self.population_size:
-            genome1_index, genome2_index = np.random.choice(
-                a=range(len(selected_genomes)),
-                size=2,
-                replace=False)
+
+            genome1_index, genome2_index = util.select_indexes(2, len(selected_genomes), selected_probabilities)
             
             newGenomes = self.crossover(
                 selected_genomes[genome1_index],
                 selected_genomes[genome2_index])
+            logging.info(f'-Novos genomas inseridos: {newGenomes[0]}')
             self.genomes.extend(newGenomes)
         #como dois genomas são inseridos de cada vez, é possível ultrapassar a quantidade de genomas caso self.n seja ímpar
         self.genomes = self.genomes[0:self.population_size]
@@ -189,10 +189,10 @@ class Population:
 
     def crossover_locus(self, genome1: Genome, genome2: Genome):
         locus = np.random.random_integers(low=1, high=self.genome_size-1)
-        genome1_genes = genome1.getGenes()
-        genome2_genes = genome2.getGenes()
-        newGenome1 = Genome(util.locus(genome1_genes, genome2_genes, locus))
-        newGenome2 = Genome(util.locus(genome2_genes, genome1_genes, locus))
+        genes1 = genome1.getGenes()
+        genes2 = genome2.getGenes()
+        newGenome1 = Genome(util.locus(genes1, genes2, locus))
+        newGenome2 = Genome(util.locus(genes2, genes1, locus))
 
         return [newGenome1, newGenome2]
 
@@ -210,11 +210,15 @@ class Population:
         return [newGenome1, newGenome2]
 
     def selection(self, fitness_list):
-        probabilities = np.array(fitness_list) / sum(fitness_list)
-        selected_genomes = np.random.choice(
-            a=self.genomes, size=self.n, p=probabilities)
+        probabilities = util.weights_to_probability(fitness_list)
+
+        selected_indexes = util.select_indexes(self.n, self.population_size, probabilities)
+        selected_genomes = np.array(self.genomes)[selected_indexes]
+        
+        selected_probabilities = probabilities[selected_indexes]
+        selected_probabilities = util.weights_to_probability(selected_probabilities)
         selected_genomes = [genome.copy() for genome in selected_genomes]
-        return selected_genomes
+        return selected_genomes, selected_probabilities
 
     def randomize_population(self, n_generations):
 

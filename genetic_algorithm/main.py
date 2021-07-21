@@ -5,6 +5,7 @@ import csv
 import time
 
 from genetic import FloatGene, Genome, IntGene, Population, StringGene, GeneSequence
+import util
 
 import pandas as pd
 from sklearn.dummy import DummyRegressor
@@ -19,15 +20,13 @@ POPULATION_PICKLE_FILE = 'population.pkl'
 BEST_NN_PICKLE_FILE = 'neural_model.pkl'
 CSV_FILE = 'log_results.csv'
 
-POPULATION_SIZE = 60
-SELECTION_SIZE = 30
-MUTATION_RATE = .01
+POPULATION_SIZE = 40
+SELECTION_SIZE = 20
+MUTATION_RATE = .005
 
 N_GENERATIONS = 1000
 
-def mse_to_fitness(mse):
-    fitness = 1. / (mse + .00001)
-    return fitness
+
 
 def genome_to_NN(genome: Genome):
     act = genome.genes[0].getValue()
@@ -46,8 +45,8 @@ def genome_to_NN(genome: Genome):
 #pois será executada em paralelo
 df = pd.read_csv('data.csv')
 
-X = df.iloc[:50000, 5:]
-y = df.iloc[:50000, 0:5]
+X = df.iloc[:10000, 5:]
+y = df.iloc[:10000, 0:5]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
 
@@ -55,8 +54,7 @@ def rate_nn_mse(nn):
     nn.fit(X_train, y_train)
     y_pred = nn.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
-    fitness = mse_to_fitness(mse)
-    return fitness
+    return nn, mse
 
 
 
@@ -64,8 +62,7 @@ def rate_nn_r2(nn):
     nn.fit(X_train, y_train)
     y_pred = nn.predict(X_test)
     r2 = r2_score(y_test, y_pred)
-    fitness = r2
-    return fitness
+    return nn, r2
     
 def main():
 
@@ -111,9 +108,16 @@ def main():
     try:
         start = time.time()
         for i in range(N_GENERATIONS):
+            evaluation_function = rate_nn_r2
+            fitness_function = util.r2_to_fitness
 
             nns = [genome_to_NN(genome) for genome in population.genomes]
-            fitness_list = pool.map(rate_nn_mse, nns)
+            results = pool.map(evaluation_function, nns)
+            
+            nns = [nn for nn, fitness in results]
+            evaluations = [ev for nn, ev in results]
+
+            fitness_list = [fitness_function(ev) for ev in evaluations]
 
             population.nextGeneration(fitness_list)
             print(f'GERAÇÃO {i+1}')

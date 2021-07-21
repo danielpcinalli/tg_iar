@@ -25,11 +25,31 @@ def locus(list1: List, list2: List, locus):
 
     return newList
 
-def select_indexes(n, m, probs):
+def select_indexes(n, m, probs=None):
     """
     Retorna n índices únicos entre [0, m) de acordo com a probabilidade
+    ou uniformemente caso não se passe probabilidades
     """
-    return np.random.choice(a=range(m), size=n, p=probs, replace=False)
+    try:
+        return np.random.choice(a=range(m), size=n, p=probs, replace=False)
+    except:
+        return np.random.choice(a=range(m), size=n, replace=False)    
+
+
 
 #x[[0,1]]
 #x[[True, False, True]]
+
+def weights_to_probability(weights: List[float]):
+    probabilities = np.array(weights) / sum(weights)
+    return probabilities
+
+def mse_to_fitness(mse):
+    fitness = 1. / (mse + .00001)
+    return fitness
+
+def r2_to_fitness(r2):
+    #r2 <= 1 ; quanto mais próximo de 1 melhor
+    distance_to_1 = 1 - r2
+    fitness = 1. / (distance_to_1 + .00001)**3
+    return fitness
