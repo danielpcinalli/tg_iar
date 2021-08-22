@@ -20,7 +20,7 @@ POPULATION_PICKLE_FILE = 'population.pkl'
 BEST_NN_PICKLE_FILE = 'neural_model.pkl'
 CSV_FILE = 'log_results.csv'
 
-POPULATION_SIZE = 40
+POPULATION_SIZE = 60
 SELECTION_SIZE = 20
 MUTATION_RATE = .005
 
@@ -37,7 +37,7 @@ def genome_to_NN(genome: Genome):
     hls = tuple(hls)
 
     clf = MLPRegressor(hidden_layer_sizes=hls, activation=act,
-                       solver=slv, learning_rate=lrs, learning_rate_init=lr, random_state=0, max_iter=400)
+                       solver=slv, learning_rate=lrs, learning_rate_init=lr, random_state=0, max_iter=600)
     return clf
 
 #carrega arquivo e cria dados de treinamento e teste
@@ -45,8 +45,8 @@ def genome_to_NN(genome: Genome):
 #pois será executada em paralelo
 df = pd.read_csv('data.csv')
 
-X = df.iloc[:10000, 5:]
-y = df.iloc[:10000, 0:5]
+X = df.iloc[:, 5:]
+y = df.iloc[:, 0:5]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
 
@@ -63,6 +63,10 @@ def rate_nn_r2(nn):
     y_pred = nn.predict(X_test)
     r2 = r2_score(y_test, y_pred)
     return nn, r2
+
+
+
+
     
 def main():
 
@@ -108,8 +112,8 @@ def main():
     try:
         start = time.time()
         for i in range(N_GENERATIONS):
-            evaluation_function = rate_nn_r2
-            fitness_function = util.r2_to_fitness
+            evaluation_function = rate_nn_mse
+            fitness_function = util.mse_to_fitness
 
             nns = [genome_to_NN(genome) for genome in population.genomes]
             results = pool.map(evaluation_function, nns)
@@ -146,9 +150,16 @@ def main():
         print('Interrompido pelo usuário')
         quit()
 
+def rede_neural_teste():
+    nn = MLPRegressor(hidden_layer_sizes=(20, 20), max_iter=500)
 
+    nn.fit(X_train, y_train)
+    y_pred = nn.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    print(mse)
 
 if __name__ == '__main__':
     main()
+    # rede_neural_teste()
 
 

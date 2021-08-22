@@ -191,8 +191,8 @@ class Population:
         locus = np.random.random_integers(low=1, high=self.genome_size-1)
         genes1 = genome1.getGenes()
         genes2 = genome2.getGenes()
-        newGenome1 = Genome(util.locus(genes1, genes2, locus))
-        newGenome2 = Genome(util.locus(genes2, genes1, locus))
+        newGenome1 = Genome(util.locus_crossover(genes1, genes2, locus))
+        newGenome2 = Genome(util.locus_crossover(genes2, genes1, locus))
 
         return [newGenome1, newGenome2]
 
