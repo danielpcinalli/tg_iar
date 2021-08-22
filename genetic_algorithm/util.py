@@ -20,7 +20,7 @@ def mix(list1: List, list2: List, list_bool: List):
             newList.append(l2)
     return newList
 
-def locus(list1: List, list2: List, locus):
+def locus_crossover(list1: List, list2: List, locus):
     newList = list1[0:locus] + list2[locus:]
 
     return newList
@@ -53,3 +53,37 @@ def r2_to_fitness(r2):
     distance_to_1 = 1 - r2
     fitness = 1. / (distance_to_1 + .00001)**3
     return fitness
+
+
+
+def random_binary_cromossome(size):
+    bin_cromossome = np.random.choice(a=['0', '1'], size=size)
+    bin_cromossome = ''.join(bin_cromossome)
+    return bin_cromossome
+
+def flip_bit_at(bin_cromossome, index):
+    def flip_bit(c):
+        if c == '1':
+            return '0'
+        return '1'
+
+    new_cromossome = bin_cromossome[0:index] + flip_bit(bin_cromossome[index]) + bin_cromossome[index+1:]
+
+    return new_cromossome
+
+def binary_locus(bin_cromossome1, bin_cromossome2, locus):
+    
+    return bin_cromossome1[:locus] + bin_cromossome2[locus:]
+
+def bin_string_to_decimal(s):
+    return int(s, 2)
+
+def consume_string(s, n):
+    return s[:n], s[n:]
+
+def compress_uniform(number, from_n, to_n, min_n, max_n):
+
+    number = number - min_n
+    number = number / (max_n - min_n) * (to_n - from_n)
+    number = number + from_n
+    return number

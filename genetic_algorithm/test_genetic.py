@@ -14,7 +14,7 @@ def test_mix():
     assert l == [2, 1, (1,2), 0, ['a', 'b']]
 
 def test_locus():
-    l = util.locus(
+    l = util.locus_crossover(
         list1=l1,
         list2=l2,
         locus=2
@@ -58,3 +58,34 @@ def test_r2_to_fitness():
 
     fitness_list = [util.r2_to_fitness(r2) for r2 in r2_score_list]
     assert fitness_list == sorted(fitness_list)
+
+def test_bin_flip_bit():
+    b = '00001000'
+    b = util.flip_bit_at(b, 3)
+    b = util.flip_bit_at(b, 4)
+
+    assert b == '00010000'
+
+def test_bin_locus_crossover():
+    c1 = '000000'
+    c2 = '111111'
+    c = util.binary_locus(c1, c2, 2)
+
+    assert c == '001111'
+
+def test_bin_string_to_decimal():
+    s = '100'
+    d = util.bin_string_to_decimal(s)
+
+    assert d == 4
+
+def test_consume_string():
+    s = '0010111001000'
+    x, s = util.consume_string(s, 5)
+
+    assert x == '00101'
+    assert s == '11001000'
+
+def test_compress_uniform():
+    n = util.compress_uniform(500, 0, 100, 400, 600)
+    assert int(n) == 50
