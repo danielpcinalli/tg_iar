@@ -112,8 +112,8 @@ def main():
     try:
         start = time.time()
         for i in range(N_GENERATIONS):
-            evaluation_function = rate_nn_mse
-            fitness_function = util.mse_to_fitness
+            evaluation_function = rate_nn_r2
+            fitness_function = util.r2_to_fitness
 
             nns = [genome_to_NN(genome) for genome in population.genomes]
             results = pool.map(evaluation_function, nns)

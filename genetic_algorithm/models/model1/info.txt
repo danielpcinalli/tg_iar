@@ -1,0 +1,23 @@
+fitness usando r2
+20 gerações
+
+hiddenLayerGene = IntGene(
+            initial_value=10, min_value=5, max_value=150, deviation=5)
+        architectureGene = GeneSequence(
+            genes=[hiddenLayerGene, hiddenLayerGene], minGenes=1, maxGenes=20, change_size_prob=.5)
+        activationGene = StringGene(
+            values_list=['relu', 'identity', 'tanh', 'logistic'], initial_value_index=0)
+        solverGene = StringGene(
+            values_list=['lbfgs', 'sgd', 'adam'], initial_value_index=2)
+        learningRateStrategyGene = StringGene(
+            values_list=['constant', 'invscaling', 'adaptive'], initial_value_index=0)
+        learningRateGene = FloatGene(
+            initial_value=.001, min_value=.0001, max_value=.01, deviation=.0005)
+
+
+X = df.iloc[:, 5:]
+y = df.iloc[:, 0:5]
+
+POPULATION_SIZE = 60
+SELECTION_SIZE = 20
+MUTATION_RATE = .005
