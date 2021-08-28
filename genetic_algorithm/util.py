@@ -45,7 +45,7 @@ def weights_to_probability(weights: List[float]):
     return probabilities
 
 def mse_to_fitness(mse):
-    fitness = 1. / (mse + .00001)
+    fitness = 1. / (mse + .00001)**3
     return fitness
 
 def r2_to_fitness(r2):
