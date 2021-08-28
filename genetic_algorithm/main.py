@@ -43,10 +43,11 @@ def genome_to_NN(genome: Genome):
 #carrega arquivo e cria dados de treinamento e teste
 #necessário fazer fora do main para passar pra função rate_nn
 #pois será executada em paralelo
-df = pd.read_csv('data.csv')
+df = pd.read_csv('data.csv', index_col=False)
 
 X = df.iloc[:, 5:]
 y = df.iloc[:, 0:5]
+
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
 
@@ -112,8 +113,14 @@ def main():
     try:
         start = time.time()
         for i in range(N_GENERATIONS):
-            evaluation_function = rate_nn_mse
-            fitness_function = util.mse_to_fitness
+
+            #usar para definir funções utilizadas facilmente
+            mse_functions = (rate_nn_mse, util.mse_to_fitness)
+            mse_cubed_functions = (rate_nn_mse, util.mse_to_fitness_cubed)
+            r2_functions = (rate_nn_r2, util.r2_to_fitness)
+
+            #usar uma das tuplas acima
+            evaluation_function, fitness_function = mse_functions
 
             nns = [genome_to_NN(genome) for genome in population.genomes]
             results = pool.map(evaluation_function, nns)
