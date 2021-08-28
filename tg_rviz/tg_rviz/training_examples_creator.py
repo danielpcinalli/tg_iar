@@ -77,10 +77,15 @@ class StatePublisher(Node):
 
     def newRandomJoints(self):
         newJoints = [
-            self.randomBetween(-2*pi, 2*pi),  #livre
-            self.randomBetween(-2., 2.),      #-2 a +2
-            self.randomBetween(-2., 2.),      #-2 a +2
-            self.randomBetween(-2*pi, 2*pi),  #livre
+            # self.randomBetween(-2*pi, 2*pi),  #livre
+            # self.randomBetween(-2., 2.),      #-2 a +2
+            # self.randomBetween(-2., 2.),      #-2 a +2
+            # self.randomBetween(-2*pi, 2*pi),  #livre
+            # self.randomBetween(-2., 2.)       #-2 a +2
+            self.randomBetween(-pi/2, pi/2),  #livre
+            self.randomBetween(-1., 1.),      #-2 a +2
+            self.randomBetween(-1., 1.),      #-2 a +2
+            self.randomBetween(-pi, pi),  #livre
             self.randomBetween(-2., 2.)       #-2 a +2
         ]
         return newJoints
