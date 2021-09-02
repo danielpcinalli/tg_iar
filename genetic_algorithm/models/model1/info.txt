@@ -1,5 +1,5 @@
 fitness usando r2
-20 gerações
+65 gerações
 
 hiddenLayerGene = IntGene(
             initial_value=10, min_value=5, max_value=150, deviation=5)

@@ -108,7 +108,13 @@ def main():
 
     pool = Pool()
 
-    best_fitness = 0
+    try:
+        results : pd.DataFrame = pd.read_csv('log_results.csv', header=None)
+        best_fitness = results.max().max()
+        print(f"Melhor fitness: {best_fitness}")
+    except:
+        best_fitness = 0
+
 
     try:
         start = time.time()
@@ -120,7 +126,7 @@ def main():
             r2_functions = (rate_nn_r2, util.r2_to_fitness)
 
             #usar uma das tuplas acima
-            evaluation_function, fitness_function = mse_functions
+            evaluation_function, fitness_function = mse_cubed_functions
 
             nns = [genome_to_NN(genome) for genome in population.genomes]
             results = pool.map(evaluation_function, nns)

@@ -1,5 +1,5 @@
 fitness usando mse ^ 3
-41 gerações
+31 gerações
 
 hiddenLayerGene = IntGene(
             initial_value=10, min_value=5, max_value=150, deviation=5)

@@ -12,32 +12,17 @@ def get_model(n):
         nn = pickle.load(pkl_file)
     return f"model{n}", nn
 
-df = pd.read_csv('data.csv', index_col=False)
+df = pd.read_csv('validacao.csv', index_col=False)
 
 X = df.iloc[:, 5:]
 y = df.iloc[:, 0:5]
 
-# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
 models = [get_model(n) for n in range(1, 4)]
 
 for name, nn in models:
-    
-
-    mses = []
-    kf = KFold(n_splits=5, shuffle=True, random_state=0)
-    for train_index, test_index in kf.split(X):
-    
-        X_train, X_test = X.iloc[train_index], X.iloc[test_index]
-        y_train, y_test = y.iloc[train_index], y.iloc[test_index]
-    
-
-        nn_clone = sklearn.base.clone(nn)
-        nn_clone.fit(X_train, y_train)
-        y_pred = nn_clone.predict(X_test)
-        mse = mean_squared_error(y_test, y_pred)
-        mses.append(mse)
+    y_pred = nn.predict(X)
+    mse = mean_squared_error(y, y_pred)
         
-    avg_mse = sum(mses) / len(mses)
     print(name)
     print(nn)
-    print(avg_mse)
+    print(f'MSE = {mse:.5f}')
