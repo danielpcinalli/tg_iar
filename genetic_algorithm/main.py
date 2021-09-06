@@ -10,7 +10,7 @@ import util
 import pandas as pd
 from sklearn.dummy import DummyRegressor
 from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, median_absolute_error
 from sklearn.model_selection import KFold, train_test_split
 import numpy as np
 
@@ -57,15 +57,17 @@ def rate_nn_mse(nn):
     mse = mean_squared_error(y_test, y_pred)
     return nn, mse
 
-
-
 def rate_nn_r2(nn):
     nn.fit(X_train, y_train)
     y_pred = nn.predict(X_test)
     r2 = r2_score(y_test, y_pred)
     return nn, r2
 
-
+def rate_nn_mae(nn):
+    nn.fit(X_train, y_train)
+    y_pred = nn.predict(X_test)
+    mae = median_absolute_error(y_test, y_pred)
+    return nn, mae
 
 
     
@@ -124,9 +126,10 @@ def main():
             mse_functions = (rate_nn_mse, util.mse_to_fitness)
             mse_cubed_functions = (rate_nn_mse, util.mse_to_fitness_cubed)
             r2_functions = (rate_nn_r2, util.r2_to_fitness)
+            mae_functions = (rate_nn_mae, util.mae_to_fitness)
 
             #usar uma das tuplas acima
-            evaluation_function, fitness_function = mse_cubed_functions
+            evaluation_function, fitness_function = mae_functions
 
             nns = [genome_to_NN(genome) for genome in population.genomes]
             results = pool.map(evaluation_function, nns)

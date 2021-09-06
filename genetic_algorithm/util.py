@@ -52,6 +52,10 @@ def mse_to_fitness_cubed(mse):
     fitness = 1. / (mse + .00001) ** 3
     return fitness
 
+def mae_to_fitness(mae):
+    fitness = 1. / (mae + .00001)
+    return fitness
+
 def r2_to_fitness(r2):
     #r2 <= 1 ; quanto mais próximo de 1 melhor
     distance_to_1 = 1 - r2
