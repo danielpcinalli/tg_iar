@@ -29,7 +29,8 @@ setup(
             'state_listener = tg_rviz.state_listener:main',
             'service_joint = tg_rviz.service_joint:main',
             'client_joint = tg_rviz.joint_client:main',
-            'training_examples_creator = tg_rviz.training_examples_creator:main'
+            'training_examples_creator = tg_rviz.training_examples_creator:main',
+            'nn_client = tg_rviz.nn_client:main'
         ],
     },
 )

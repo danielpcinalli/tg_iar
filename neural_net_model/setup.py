@@ -23,7 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'nn_client = neural_net_model.nn_client:main',
+            'nn_client = neural_net_model.nn_client_minimal:main',
             'nn_service = neural_net_model.nn_service:main'
         ],
     },
