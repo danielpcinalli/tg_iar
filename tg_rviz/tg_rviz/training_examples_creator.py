@@ -12,6 +12,8 @@ import tf2_ros
 from rclpy.time import Time
 from csv import writer
 
+DATA_FILENAME = '/home/osboxes/results/data.csv'
+
 class StatePublisher(Node):
 
     def __init__(self):
@@ -58,7 +60,7 @@ class StatePublisher(Node):
                 #caso as posições tenham atualizado, salva e cria novas juntas aleatórias
                 if self.hasTransformUpdated():
                     self.previousTF = self.newTF
-                    with open('/home/osboxes/results/data.csv', 'a+', newline='') as f:
+                    with open(DATA_FILENAME, 'a+', newline='') as f:
                         csv_writer = writer(f)
                         newRow = joints + [
                             self.newTF.transform.translation.x,

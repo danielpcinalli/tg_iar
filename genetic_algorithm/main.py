@@ -99,6 +99,9 @@ def main():
                                 n_selected=SELECTION_SIZE, mutation_rate=MUTATION_RATE, crossover_strategy='locus')
         population.randomize_population(n_generations=500)
 
+        #esvazia arquivo
+        open(CSV_FILE, 'w').close()
+
     if sys.argv[1] == 'load':
         print('População carregada')
         with open(POPULATION_PICKLE_FILE, 'rb') as pkl_file:
