@@ -9,7 +9,7 @@ t1, t2, t3, t4, t5 = symbols('theta1 theta2 theta3 theta4 theta5')
 ti, al, a, d = symbols('theta_i alpha a d')
 
 al1, al2, al3, al4, al5 = pi/2, 0, pi/2, pi/2, 0
-d1, d2, d3, d4, d5 = .1305, 0, 0, .2225, 0
+d1, d2, d3, d4, d5 = .2305, 0, 0, .2225, 0
 a1, a2, a3, a4, a5 = 0, .2211, 0, 0, .1488
 
 
